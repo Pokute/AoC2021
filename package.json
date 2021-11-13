@@ -1,0 +1,15 @@
+{
+    "name": "rlcourseplayground",
+    "version": "1.0.0",
+    "description": "No",
+    "author": "Pokute <pickledpokute@gmail.com>",
+    "main": "app.js",
+    "private": true,
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.16.1"
+    }
+  }
+  
