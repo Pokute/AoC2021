@@ -1,15 +1,19 @@
 {
-    "name": "rlcourseplayground",
-    "version": "1.0.0",
-    "description": "No",
-    "author": "Pokute <pickledpokute@gmail.com>",
-    "main": "app.js",
-    "private": true,
-    "scripts": {
-      "start": "node server.js"
-    },
-    "dependencies": {
-      "express": "^4.16.1"
-    }
+  "name": "pokute-aoc-2021",
+  "version": "1.0.0",
+  "description": "No",
+  "author": "Pokute <pickledpokute@gmail.com>",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "node -r ts-node/register --loader ts-node/esm app.ts"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "typescript": "npm:@typescript-deploys/pr-build@4.6.0-pr-43617-23",
+    "ts-node": "^10.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.11"
   }
-  
+}
