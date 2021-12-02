@@ -6,8 +6,9 @@
   "main": "app.js",
   "private": true,
   "scripts": {
-    "start": "node --experimental-json-modules -r ts-node/register --loader ts-node/esm 1.ts",
-    "startDbg": "node --experimental-json-modules --inspect-brk -r ts-node/register --loader ts-node/esm 1.ts"
+    "start": "node --experimental-json-modules -r ts-node/register --loader ts-node/esm 2.ts",
+    "startDbg": "node --experimental-json-modules --inspect-brk -r ts-node/register --loader ts-node/esm 1.ts",
+    "postinstall": "patch-package"
   },
   "type": "module",
   "dependencies": {
