@@ -1,0 +1,27 @@
+diff --git a/node_modules/ts-node/dist-raw/node-options.js b/node_modules/ts-node/dist-raw/node-options.js
+index 0602a47..a54e821 100644
+--- a/node_modules/ts-node/dist-raw/node-options.js
++++ b/node_modules/ts-node/dist-raw/node-options.js
+@@ -34,7 +34,8 @@ function parseArgv(argv) {
+     '--es-module-specifier-resolution': '--experimental-specifier-resolution',
+     '--experimental-policy': String,
+     '--conditions': [String],
+-    '--pending-deprecation': Boolean
++    '--pending-deprecation': Boolean,
++    '--experimental-json-modules': Boolean,
+   }, {
+     argv,
+     permissive: true
+diff --git a/node_modules/ts-node/dist/esm.js b/node_modules/ts-node/dist/esm.js
+index ec549c0..7aa6cc1 100644
+--- a/node_modules/ts-node/dist/esm.js
++++ b/node_modules/ts-node/dist/esm.js
+@@ -77,7 +77,7 @@ function createEsmHooks(tsNodeService) {
+             let source = undefined;
+             if (format !== 'builtin' && format !== 'commonjs') {
+                 // Call the new defaultLoad() to get the source
+-                const { source: rawSource } = yield defaultLoad(url, { format }, defaultLoad);
++                const { source: rawSource } = yield defaultLoad(url, { format, importAssertions: context.importAssertions }, defaultLoad);
+                 if (rawSource === undefined || rawSource === null) {
+                     throw new Error(`Failed to load raw source: Format was '${format}' and url was '${url}''.`);
+                 }

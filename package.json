@@ -12,8 +12,9 @@
   "type": "module",
   "dependencies": {
     "express": "^4.17.1",
-    "typescript": "npm:@typescript-deploys/pr-build@4.6.0-pr-43617-23",
-    "ts-node": "^10.4.0"
+    "patch-package": "^6.4.7",
+    "ts-node": "^10.4.0",
+    "typescript": "npm:@typescript-deploys/pr-build@4.6.0-pr-43617-23"
   },
   "devDependencies": {
     "@types/node": "^16.11.11"
