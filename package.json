@@ -6,8 +6,10 @@
   "main": "app.js",
   "private": true,
   "scripts": {
-    "start": "node -r ts-node/register --loader ts-node/esm app.ts"
+    "start": "node --experimental-json-modules -r ts-node/register --loader ts-node/esm 1.ts",
+    "startDbg": "node --experimental-json-modules --inspect-brk -r ts-node/register --loader ts-node/esm 1.ts"
   },
+  "type": "module",
   "dependencies": {
     "express": "^4.17.1",
     "typescript": "npm:@typescript-deploys/pr-build@4.6.0-pr-43617-23",
