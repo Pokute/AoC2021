@@ -40,7 +40,7 @@ const sumMovements = (movements: Array<ReturnType<typeof parseMovement>>) =>
 					x: sum.x + part.x,
 					z: sum.z + part.z,
 				})
-		, { x: 0, z: 0});
+		, { x: 0, z: 0 });
 
 const funnyMultiply = (movement: Vector) =>
 	movement.x * movement.z;
@@ -59,5 +59,36 @@ sampleJson.text
 
 inputJson.text
 	|>> calculateFunnyDistance
+	|> `input funnily multiplied: ${#}`
+	|>> console.log;
+
+const sumAimMovements = (movements: Array<ReturnType<typeof parseMovement>>) =>
+	movements
+		.reduce(
+			(sum: Vector & { aim: number }, part: Vector) =>
+				({
+					x: sum.x + part.x,
+					aim: sum.aim + part.z,
+				}) |>
+				({
+					...(#),
+					z: sum.z + #.aim * part.x
+				})
+		, { x: 0, z: 0, aim: 0 });
+
+const calculateFunnyAimDistance = (input: string) =>
+	input
+		|>> textRowsToArray
+		|> #.map(parseMovement)
+		|>> sumAimMovements
+		|>> funnyMultiply;
+
+sampleJson.text
+	|>> calculateFunnyAimDistance
+	|> `sample funnily multiplied: ${#}`
+	|>> console.log;
+
+inputJson.text
+	|>> calculateFunnyAimDistance
 	|> `input funnily multiplied: ${#}`
 	|>> console.log;
