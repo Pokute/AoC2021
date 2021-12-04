@@ -73,6 +73,35 @@ const findFirstWinnerBoard = ({ calledNumbers, boards }: ReturnType<typeof parse
                 .map(board => board.map(row => row.map(number => ({ number, marked: false }))))
         });
 
+const findLastWinnerBoard = ({ calledNumbers, boards }: ReturnType<typeof parseInput>) =>
+    calledNumbers.reduce<{
+        lastWinner?: Board<BoardMarkedCell>,
+        winningNumber?: number,
+        boardsWithSelectedNumbers: Array<Board<BoardMarkedCell>>,
+    }>(({ lastWinner, winningNumber, boardsWithSelectedNumbers }, currentNumber) =>
+        lastWinner
+            ? ({ lastWinner, winningNumber, boardsWithSelectedNumbers })
+            : boardsWithSelectedNumbers.map(boardWithSelectedNumbers => boardWithSelectedNumbers |> markBoardWithSelectedNumbers(#, currentNumber) )
+                |> ({
+                    previouslyWonBoardCount: boardsWithSelectedNumbers.filter(board => board |>> isWinningBoard).length,
+                    newlyWonBoardCount: #.filter(board => board |>> isWinningBoard).length,
+                    totalBoards: #.length,
+                    boardsWithSelectedNumbers: #
+                })
+                |> ((#.newlyWonBoardCount === #.totalBoards)
+                    ? ({
+                        boardsWithSelectedNumbers: #.boardsWithSelectedNumbers,
+                        lastWinner: boardsWithSelectedNumbers.filter(board => board |> !isWinningBoard(#))[0] |> markBoardWithSelectedNumbers(#, currentNumber),
+                        winningNumber: currentNumber,
+                    })
+                    : ({
+                        boardsWithSelectedNumbers: #.boardsWithSelectedNumbers,
+                    }))
+        , {
+            boardsWithSelectedNumbers: boards
+                .map(board => board.map(row => row.map(number => ({ number, marked: false }))))
+        });
+
 const calculateAnswer = ({ winner, winningNumber} : { winner?: Board<BoardMarkedCell>, winningNumber?: number }) =>
     winner
     ? winningNumber *
@@ -92,5 +121,28 @@ json.input
     |>> parseInput
     |>> findFirstWinnerBoard
     |>> calculateAnswer
-    |> `sample score: ${#}`
+    |> `input score: ${#}`
+    |>> console.log;
+
+    
+json.sample
+    |>> parseInput
+    |>> findLastWinnerBoard
+    |> ({
+        winner: #.lastWinner,
+        winningNumber: #.winningNumber,
+    })
+    |>> calculateAnswer
+    |> `sample score of last winner: ${#}`
+    |>> console.log;
+
+    json.input
+    |>> parseInput
+    |>> findLastWinnerBoard
+    |> ({
+        winner: #.lastWinner,
+        winningNumber: #.winningNumber,
+    })
+    |>> calculateAnswer
+    |> `input score of last winner: ${#}`
     |>> console.log;
