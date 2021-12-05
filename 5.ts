@@ -45,15 +45,17 @@ const ventLineToRightDownDirection = ({ a, b }: VentLine) => ({
     b: { x: Math.max(a.x, b.x), y: Math.max(a.y, b.y) },
 })
 
-const interpolateHVLine = ({ a, b }: VentLine) =>
-    (a.x !== b.x)
-        ? Array(b.x - a.x + 1).fill(0).map((_, i) => ({ x: a.x + i, y: a.y }))
-        : Array(b.y - a.y + 1).fill(0).map((_, i) => ({ x: a.x, y: a.y + i }));
+const interpolateLine = ({ a, b }: VentLine) =>
+    ({
+        dx: Math.sign(b.x - a.x),
+        dy: Math.sign(b.y - a.y),
+    })
+    |> Array(Math.max(Math.abs(b.x - a.x) + 1, Math.abs(b.y - a.y) + 1)).fill(0)
+        .map((_, i) => ({ x: a.x + i * #.dx, y: a.y + i * #.dy }))
 
-const applyHVLineToMap = <T>(map: Map<T>, line: VentLine, applyFun: (oldVal: T, pos: Point, line: VentLine, map: Map<T>) => T) =>
+const applyLineToMap = <T>(map: Map<T>, line: VentLine, applyFun: (oldVal: T, pos: Point, line: VentLine, map: Map<T>) => T) =>
     line
-        |>> ventLineToRightDownDirection
-        |>> interpolateHVLine
+        |>> interpolateLine
         |> #.reduce(
             (oldMap: Map<T>, { x, y }: Point) => ({
                 ...oldMap,
@@ -70,14 +72,14 @@ const applyHVLineToMap = <T>(map: Map<T>, line: VentLine, applyFun: (oldVal: T, 
             , map
         )
 
-const incrementGridNum: Parameters<typeof applyHVLineToMap>[2] = (oldVal: number) =>
+const incrementGridNum: Parameters<typeof applyLineToMap>[2] = (oldVal: number) =>
     oldVal + 1;
 
 json.sample
     |>> inputToVentLines
     |> #.filter(isHorizOrVert)
     |> #.reduce((currentMap, ventLine) =>
-        applyHVLineToMap(currentMap, ventLine, incrementGridNum)
+        applyLineToMap(currentMap, ventLine, incrementGridNum)
         , createMap({
             w: #.map(line => line |>> Object.values) |> #.flat(1).map(({ x }) => x) |>> getMax |> # + 1,
             h: #.map(line => line |>> Object.values) |> #.flat(1).map(({ y }) => y) |>> getMax |> # + 1
@@ -94,7 +96,7 @@ json.input
     |>> inputToVentLines
     |> #.filter(isHorizOrVert)
     |> #.reduce((currentMap, ventLine) =>
-        applyHVLineToMap(currentMap, ventLine, incrementGridNum)
+        applyLineToMap(currentMap, ventLine, incrementGridNum)
         , createMap({
             w: #.map(line => line |>> Object.values) |> #.flat(1).map(({ x }) => x) |>> getMax |> # + 1,
             h: #.map(line => line |>> Object.values) |> #.flat(1).map(({ y }) => y) |>> getMax |> # + 1
@@ -104,5 +106,37 @@ json.input
     |> #.flat(2)
     |> #.filter(n => n >= 2)
     |> #.length
-    |> `sample HV line intersection count: ${#}`
+    |> `input HV line intersection count: ${#}`
+    |>> console.log;
+
+json.sample
+    |>> inputToVentLines
+    |> #.reduce((currentMap, ventLine) =>
+        applyLineToMap(currentMap, ventLine, incrementGridNum)
+        , createMap({
+            w: #.map(line => line |>> Object.values) |> #.flat(1).map(({ x }) => x) |>> getMax |> # + 1,
+            h: #.map(line => line |>> Object.values) |> #.flat(1).map(({ y }) => y) |>> getMax |> # + 1
+        }, 0)
+    )
+    |> #.grid
+    |> #.flat(2)
+    |> #.filter(n => n >= 2)
+    |> #.length
+    |> `sample line intersection count: ${#}`
+    |>> console.log;
+
+json.input
+    |>> inputToVentLines
+    |> #.reduce((currentMap, ventLine) =>
+        applyLineToMap(currentMap, ventLine, incrementGridNum)
+        , createMap({
+            w: #.map(line => line |>> Object.values) |> #.flat(1).map(({ x }) => x) |>> getMax |> # + 1,
+            h: #.map(line => line |>> Object.values) |> #.flat(1).map(({ y }) => y) |>> getMax |> # + 1
+        }, 0)
+    )
+    |> #.grid
+    |> #.flat(2)
+    |> #.filter(n => n >= 2)
+    |> #.length
+    |> `input line intersection count: ${#}`
     |>> console.log;
