@@ -60,6 +60,7 @@ json.sample
         , #)
     |> Object.values<number>(#)
     |> #.reduce((sum: number, curr: number) => sum + curr, 0)
+    |> (`sample lanterFished after ${simulatedDays}: ${#}`)
     |>> console.log;
 
 json.input
@@ -75,4 +76,39 @@ json.input
         , #)
     |>> Object.values
     |> #.reduce((sum: number, curr: number) => sum + curr, 0)
+    |> (`input lanterFished after ${simulatedDays}: ${#}`)
+    |>> console.log;
+
+const simulatedDaysPart2 = 256;
+
+json.sample
+    |>> inputToAges
+    |>> groupByAges
+    |> Array(simulatedDaysPart2).fill(0)
+        .reduce((groupedByAges) =>
+            sumGroups(
+                ageByDay(groupedByAges),
+                resetSpawnTime(groupedByAges),
+                spawnNew(groupedByAges),
+            )
+        , #)
+    |> Object.values<number>(#)
+    |> #.reduce((sum: number, curr: number) => sum + curr, 0)
+    |> (`sample lanterFished after ${simulatedDaysPart2}: ${#}`)
+    |>> console.log;
+
+json.input
+    |>> inputToAges
+    |>> groupByAges
+    |> Array(simulatedDaysPart2).fill(0)
+        .reduce((groupedByAges) =>
+            sumGroups(
+                ageByDay(groupedByAges),
+                resetSpawnTime(groupedByAges),
+                spawnNew(groupedByAges),
+            )
+        , #)
+    |>> Object.values
+    |> #.reduce((sum: number, curr: number) => sum + curr, 0)
+    |> (`input lanterFished after ${simulatedDaysPart2}: ${#}`)
     |>> console.log;
